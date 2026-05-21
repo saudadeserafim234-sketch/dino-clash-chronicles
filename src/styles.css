@@ -4,28 +4,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
- */
-
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -45,100 +28,98 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-ring-offset-background: var(--background);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+  --font-pixel: "Press Start 2P", "VT323", monospace;
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
-  --sidebar-primary: oklch(0.208 0.042 265.755);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
-  --sidebar-ring: oklch(0.704 0.04 256.788);
+  --radius: 0.25rem;
+  --background: oklch(0.13 0.02 200);
+  --foreground: oklch(0.97 0.02 180);
+  --card: oklch(0.18 0.03 200);
+  --card-foreground: oklch(0.97 0.02 180);
+  --popover: oklch(0.16 0.03 200);
+  --popover-foreground: oklch(0.97 0.02 180);
+  --primary: oklch(0.82 0.18 175);            /* teal #2dd4a8 */
+  --primary-foreground: oklch(0.13 0.02 200);
+  --secondary: oklch(0.7 0.22 45);             /* orange #ff6b35 */
+  --secondary-foreground: oklch(0.13 0.02 200);
+  --accent: oklch(0.92 0.18 100);              /* yellow #ffeb3b */
+  --accent-foreground: oklch(0.13 0.02 200);
+  --muted: oklch(0.22 0.03 200);
+  --muted-foreground: oklch(0.7 0.03 180);
+  --destructive: oklch(0.65 0.24 25);
+  --destructive-foreground: oklch(0.97 0.02 180);
+  --border: oklch(0.3 0.05 180);
+  --input: oklch(0.22 0.03 200);
+  --ring: oklch(0.82 0.18 175);
 }
 
-.dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+@font-face {
+  font-family: "Press Start 2P";
+  src: url("https://fonts.gstatic.com/s/pressstart2p/v15/e3t4euO8T-267oIAQAu6jDQyK3nVivM.woff2") format("woff2");
+  font-display: swap;
 }
 
 @layer base {
-  * {
-    border-color: var(--color-border);
-  }
-
+  * { border-color: var(--color-border); }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: "Press Start 2P", "VT323", system-ui, monospace;
+    image-rendering: pixelated;
+    background-image:
+      radial-gradient(circle at 20% 10%, oklch(0.82 0.18 175 / 0.08), transparent 40%),
+      radial-gradient(circle at 80% 90%, oklch(0.7 0.22 45 / 0.08), transparent 40%),
+      repeating-linear-gradient(0deg, transparent 0 2px, oklch(1 0 0 / 0.015) 2px 3px);
   }
+  img { image-rendering: pixelated; }
+  h1,h2,h3 { letter-spacing: 0.02em; }
+}
+
+@layer utilities {
+  .text-pixel { font-family: var(--font-pixel); }
+  .neon-teal { color: var(--primary); text-shadow: 0 0 6px var(--primary), 0 0 16px color-mix(in oklab, var(--primary) 60%, transparent); }
+  .neon-orange { color: var(--secondary); text-shadow: 0 0 6px var(--secondary), 0 0 16px color-mix(in oklab, var(--secondary) 60%, transparent); }
+  .neon-yellow { color: var(--accent); text-shadow: 0 0 6px var(--accent), 0 0 14px color-mix(in oklab, var(--accent) 60%, transparent); }
+  .arcade-border {
+    border: 3px solid var(--primary);
+    box-shadow:
+      0 0 0 3px var(--background),
+      0 0 0 5px var(--primary),
+      0 0 24px color-mix(in oklab, var(--primary) 50%, transparent);
+  }
+  .arcade-border-orange {
+    border: 3px solid var(--secondary);
+    box-shadow:
+      0 0 0 3px var(--background),
+      0 0 0 5px var(--secondary),
+      0 0 24px color-mix(in oklab, var(--secondary) 50%, transparent);
+  }
+  .arcade-btn {
+    font-family: var(--font-pixel);
+    font-size: 0.75rem;
+    padding: 0.9rem 1.2rem;
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border: 3px solid oklch(0.13 0.02 200);
+    box-shadow: 4px 4px 0 0 oklch(0.13 0.02 200), 0 0 18px color-mix(in oklab, var(--primary) 60%, transparent);
+    transition: transform 80ms, box-shadow 80ms;
+    cursor: pointer;
+    text-transform: uppercase;
+  }
+  .arcade-btn:hover { transform: translate(-1px,-1px); box-shadow: 5px 5px 0 0 oklch(0.13 0.02 200), 0 0 24px color-mix(in oklab, var(--primary) 80%, transparent); }
+  .arcade-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 0 oklch(0.13 0.02 200); }
+  .arcade-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .arcade-btn-orange { background: var(--secondary); color: var(--secondary-foreground); box-shadow: 4px 4px 0 0 oklch(0.13 0.02 200), 0 0 18px color-mix(in oklab, var(--secondary) 60%, transparent); }
+  .arcade-btn-orange:hover { box-shadow: 5px 5px 0 0 oklch(0.13 0.02 200), 0 0 24px color-mix(in oklab, var(--secondary) 80%, transparent); }
+  .arcade-btn-yellow { background: var(--accent); color: var(--accent-foreground); box-shadow: 4px 4px 0 0 oklch(0.13 0.02 200), 0 0 18px color-mix(in oklab, var(--accent) 60%, transparent); }
+  .scanlines::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(0deg, transparent 0 2px, oklch(0 0 0 / 0.25) 2px 4px);
+    mix-blend-mode: multiply;
+  }
+  @keyframes flicker { 0%,100% { opacity:1 } 50% { opacity:.85 } }
+  .flicker { animation: flicker 2.5s infinite; }
+  @keyframes blink { 0%,49% { opacity:1 } 50%,100% { opacity:.2 } }
+  .blink { animation: blink 1s steps(1) infinite; }
 }
