@@ -1,26 +1,25 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { DinoGame } from "@/components/DinoGame";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Dino Arcade — Prehistoric Card Battle" },
+      {
+        name: "description",
+        content:
+          "Retro arcade card game with 41 real dinosaur species. Swap or play to climb the leaderboard.",
+      },
+      { property: "og:title", content: "Dino Arcade — Prehistoric Card Battle" },
+      {
+        property: "og:description",
+        content: "Pixel-art dinosaur card battle. 41 species. Local high scores.",
+      },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
-  return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
-  );
-}
-
 function Index() {
-  return <PlaceholderIndex />;
+  return <DinoGame />;
 }
