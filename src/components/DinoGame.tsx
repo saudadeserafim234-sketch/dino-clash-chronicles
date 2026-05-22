@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { DINOS, type Dino, TOTAL_CARDS } from "@/lib/dinos";
 import { DinoCard } from "@/components/DinoCard";
 import { loadScores, saveScore, type ScoreEntry } from "@/lib/scores";
@@ -23,8 +23,8 @@ function shuffle<T>(arr: T[]): T[] {
 
 export function DinoGame() {
   const [phase, setPhase] = useState<Phase>("menu");
-  const [deck, setDeck] = useState<Dino[]>([]); // remaining draw pile
-  const [usedCount, setUsedCount] = useState(0); // cards consumed (played or swapped away)
+  const [deck, setDeck] = useState<Dino[]>([]);
+  const [usedCount, setUsedCount] = useState(0);
   const [player, setPlayer] = useState<Dino | null>(null);
   const [system, setSystem] = useState<Dino | null>(null);
   const [score, setScore] = useState(0);
@@ -38,7 +38,7 @@ export function DinoGame() {
     setScores(loadScores());
   }, []);
 
-  const remaining = TOTAL_CARDS - usedCount; // includes the two on table
+  const remaining = TOTAL_CARDS - usedCount;
   const progressPct = Math.min(100, (usedCount / TOTAL_CARDS) * 100);
 
   function startGame() {
@@ -64,17 +64,13 @@ export function DinoGame() {
   function handleSwap() {
     if (!player || !system) return;
     if (swapsInARow >= 2) return;
-    // Player keeps system's card, their own card is eliminated.
-    // One card consumed.
     const newPlayer = system;
     const consumed = usedCount + 1;
-    // Draw new system card
     const [next, ...rest] = deck;
     if (!next) {
-      // No more cards to draw -> game ends; reveal final.
       setPlayer(newPlayer);
       setSystem(null);
-      setUsedCount(consumed + 1); // the leftover player card also counts when game ends? It is the last unplayed.
+      setUsedCount(consumed + 1);
       setSwapsInARow(swapsInARow + 1);
       finishGame();
       return;
@@ -97,7 +93,6 @@ export function DinoGame() {
     setLastResult({ player, system, outcome: win ? "win" : "loss", delta });
     setSwapsInARow(0);
     setPhase("reveal");
-    // Two cards consumed
     const consumed = usedCount + 2;
     setUsedCount(consumed);
   }
@@ -113,7 +108,6 @@ export function DinoGame() {
       return;
     }
     if (!s) {
-      // Only one card left — the player gets it; nothing to compare. End game.
       setPlayer(p);
       setSystem(null);
       setDeck(rest);
@@ -133,7 +127,7 @@ export function DinoGame() {
   }
 
   function handleSaveScore() {
-    const name = playerName.trim().slice(0, 16) || "ANON";
+    const name = playerName.trim().slice(0, 16) || "ANÓNIMO";
     const entry: ScoreEntry = {
       name: name.toUpperCase(),
       score,
@@ -167,7 +161,6 @@ export function DinoGame() {
     );
   }
 
-  // playing or reveal
   return (
     <Board
       player={player}
@@ -194,26 +187,26 @@ function Menu({ onPlay, scores }: { onPlay: () => void; scores: ScoreEntry[] }) 
     <div className="min-h-screen px-4 py-10 flex flex-col items-center gap-10">
       <header className="text-center">
         <h1 className="text-pixel text-3xl sm:text-5xl neon-teal flicker">
-          DINO ARCADE
+          MEGAFAUNA ARCADE
         </h1>
         <p className="mt-4 text-pixel text-[10px] sm:text-xs neon-orange">
-          BATTLE OF THE PREHISTORIC CARDS
+          BATALHA DE CARTAS PRÉ-HISTÓRICAS
         </p>
       </header>
 
       <button onClick={onPlay} className="arcade-btn arcade-btn-yellow text-base">
-        ▶ PRESS START
+        ▶ PREMIR PARA COMEÇAR
       </button>
 
       <section className="w-full max-w-2xl">
         <h2 className="text-pixel text-sm sm:text-base neon-orange mb-4 text-center">
-          ◆ HALL OF FAME ◆
+          ◆ TABELA DE HONRA ◆
         </h2>
         <Leaderboard scores={scores} />
       </section>
 
       <footer className="text-pixel text-[8px] sm:text-[10px] text-muted-foreground opacity-70">
-        v1.0 · LOCAL SAVE · 41 SPECIES
+        v1.0 · GUARDADO LOCALMENTE · 41 ESPÉCIES
       </footer>
     </div>
   );
@@ -224,7 +217,7 @@ function Leaderboard({ scores }: { scores: ScoreEntry[] }) {
     return (
       <div className="arcade-border-orange bg-card p-6 text-center">
         <p className="text-pixel text-[10px] sm:text-xs text-muted-foreground">
-          NO SCORES YET — BE THE FIRST PALEONTOLOGIST
+          AINDA SEM PONTUAÇÕES — SÊ O PRIMEIRO PALEONTÓLOGO
         </p>
       </div>
     );
@@ -241,7 +234,7 @@ function Leaderboard({ scores }: { scores: ScoreEntry[] }) {
               {String(i + 1).padStart(2, "0")}
             </span>
             <span className="truncate">{s.name}</span>
-            <span className="neon-yellow">{s.score.toLocaleString()}</span>
+            <span className="neon-yellow">{s.score.toLocaleString("pt-PT")}</span>
           </li>
         ))}
       </ul>
@@ -249,37 +242,37 @@ function Leaderboard({ scores }: { scores: ScoreEntry[] }) {
   );
 }
 
-/* ============================ RULES ============================ */
+/* ============================ REGRAS ============================ */
 
 function Rules({ onStart, onBack }: { onStart: () => void; onBack: () => void }) {
   return (
     <div className="min-h-screen px-4 py-10 flex flex-col items-center">
-      <h2 className="text-pixel text-xl sm:text-3xl neon-teal mb-8">HOW TO PLAY</h2>
+      <h2 className="text-pixel text-xl sm:text-3xl neon-teal mb-8">COMO JOGAR</h2>
       <div className="arcade-border bg-card p-5 sm:p-8 max-w-2xl text-pixel text-[10px] sm:text-xs leading-relaxed space-y-4">
-        <p><span className="neon-yellow">▸ DECK:</span> 41 unique real dinosaurs, each with POWER 0–100.</p>
-        <p><span className="neon-yellow">▸ ROUND:</span> Your card faces a hidden system card.</p>
+        <p><span className="neon-yellow">▸ BARALHO:</span> 41 dinossauros reais e únicos, cada um com PODER de 0 a 100.</p>
+        <p><span className="neon-yellow">▸ RONDA:</span> A tua carta enfrenta uma carta escondida do sistema.</p>
         <p>
-          <span className="neon-orange">▸ SWAP:</span> Trade your card for the system's.
-          Your card is eliminated. You only learn the new power after the swap.
-          Max <span className="neon-yellow">2 swaps in a row</span>.
+          <span className="neon-orange">▸ TROCAR:</span> Trocas a tua carta pela do sistema.
+          A tua carta é eliminada. Só descobres o novo poder depois da troca.
+          Máximo de <span className="neon-yellow">2 trocas seguidas</span>.
         </p>
         <p>
-          <span className="neon-orange">▸ PLAY:</span> Reveal both cards. Highest power wins.
-          <br />Win → <span className="neon-teal">+sum of both powers</span>
-          <br />Lose → <span className="neon-orange">-sum of both powers</span>
-          <br />Both cards are eliminated and you draw a new one.
+          <span className="neon-orange">▸ JOGAR:</span> Revelam-se as duas cartas. Ganha quem tiver maior poder.
+          <br />Vitória → <span className="neon-teal">+soma dos dois poderes</span>
+          <br />Derrota → <span className="neon-orange">−soma dos dois poderes</span>
+          <br />As duas cartas são eliminadas e recebes uma nova.
         </p>
-        <p><span className="neon-yellow">▸ END:</span> Game ends when all 41 cards are gone. Score can be negative.</p>
+        <p><span className="neon-yellow">▸ FIM:</span> O jogo acaba quando as 41 cartas se esgotam. A pontuação pode ser negativa.</p>
       </div>
       <div className="mt-8 flex flex-wrap gap-4 justify-center">
-        <button onClick={onBack} className="arcade-btn arcade-btn-orange">◀ BACK</button>
-        <button onClick={onStart} className="arcade-btn arcade-btn-yellow">START ▶</button>
+        <button onClick={onBack} className="arcade-btn arcade-btn-orange">◀ VOLTAR</button>
+        <button onClick={onStart} className="arcade-btn arcade-btn-yellow">COMEÇAR ▶</button>
       </div>
     </div>
   );
 }
 
-/* ============================ BOARD ============================ */
+/* ============================ TABULEIRO ============================ */
 
 function Board(props: {
   player: Dino | null;
@@ -297,7 +290,7 @@ function Board(props: {
   onQuit: () => void;
 }) {
   const {
-    player, system, score, usedCount, remaining, progressPct,
+    player, system, score, usedCount, progressPct,
     swapsInARow, phase, lastResult, onSwap, onPlay, onContinue, onQuit,
   } = props;
 
@@ -310,13 +303,13 @@ function Board(props: {
     <div className="min-h-screen px-4 py-6 flex flex-col items-center gap-6">
       {/* HUD */}
       <div className="w-full max-w-4xl grid grid-cols-2 sm:grid-cols-4 gap-3 text-pixel text-[9px] sm:text-[11px]">
-        <HudCell label="SCORE" value={score.toLocaleString()} accent={score >= 0 ? "teal" : "orange"} />
-        <HudCell label="PLAYED" value={`${usedCount}/${TOTAL_CARDS}`} accent="yellow" />
-        <HudCell label="LEFT" value={String(Math.max(0, TOTAL_CARDS - usedCount))} accent="teal" />
-        <HudCell label="SWAPS LEFT" value={String(swapsLeft)} accent="orange" />
+        <HudCell label="PONTOS" value={score.toLocaleString("pt-PT")} accent={score >= 0 ? "teal" : "orange"} />
+        <HudCell label="JOGADAS" value={`${usedCount}/${TOTAL_CARDS}`} accent="yellow" />
+        <HudCell label="RESTAM" value={String(Math.max(0, TOTAL_CARDS - usedCount))} accent="teal" />
+        <HudCell label="TROCAS" value={String(swapsLeft)} accent="orange" />
       </div>
 
-      {/* Progress bar */}
+      {/* Barra de progresso */}
       <div className="w-full max-w-4xl">
         <div className="arcade-border-orange bg-background h-5 relative overflow-hidden">
           <div
@@ -331,26 +324,25 @@ function Board(props: {
         </div>
       </div>
 
-      {/* Cards */}
+      {/* Cartas */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 mt-2">
-        <DinoCard dino={player} variant="player" label="YOUR CARD" />
+        <DinoCard dino={player} variant="player" label="A TUA CARTA" />
         <div className="text-pixel text-2xl sm:text-4xl neon-yellow">VS</div>
         <DinoCard
           dino={system}
           variant="system"
-          label="OPPONENT"
+          label="ADVERSÁRIO"
           hidePower={phase === "playing"}
         />
       </div>
 
-      {/* Action area */}
       {phase === "playing" && (
         <div className="flex flex-wrap gap-4 justify-center mt-2">
           <button onClick={onSwap} disabled={!canSwap} className="arcade-btn arcade-btn-orange">
-            ⇄ SWAP {swapsLeft > 0 ? `(${swapsLeft} LEFT)` : "(MAX)"}
+            ⇄ TROCAR {swapsLeft > 0 ? `(RESTAM ${swapsLeft})` : "(MÁX)"}
           </button>
           <button onClick={onPlay} className="arcade-btn">
-            ⚔ PLAY
+            ⚔ JOGAR
           </button>
         </div>
       )}
@@ -362,14 +354,14 @@ function Board(props: {
               lastResult.outcome === "win" ? "neon-teal" : "neon-orange"
             }`}
           >
-            {lastResult.outcome === "win" ? "★ VICTORY ★" : "✗ DEFEAT ✗"}
+            {lastResult.outcome === "win" ? "★ VITÓRIA ★" : "✗ DERROTA ✗"}
           </div>
           <div className="text-pixel text-xs sm:text-sm neon-yellow">
-            {lastResult.outcome === "win" ? "+" : "-"}
+            {lastResult.outcome === "win" ? "+" : "−"}
             {Math.abs(lastResult.delta)} PTS
           </div>
           <button onClick={onContinue} className="arcade-btn arcade-btn-yellow">
-            NEXT ROUND ▶
+            PRÓXIMA RONDA ▶
           </button>
         </div>
       )}
@@ -378,7 +370,7 @@ function Board(props: {
         onClick={onQuit}
         className="text-pixel text-[9px] sm:text-[10px] text-muted-foreground hover:neon-orange mt-4"
       >
-        ◀ QUIT TO MENU
+        ◀ SAIR PARA O MENU
       </button>
     </div>
   );
@@ -394,7 +386,7 @@ function HudCell({ label, value, accent }: { label: string; value: string; accen
   );
 }
 
-/* ============================ GAME OVER ============================ */
+/* ============================ FIM DE JOGO ============================ */
 
 function GameOver(props: {
   score: number;
@@ -409,38 +401,38 @@ function GameOver(props: {
   const { score, playerName, setPlayerName, onSave, saved, scores, onMenu, onAgain } = props;
   return (
     <div className="min-h-screen px-4 py-10 flex flex-col items-center gap-8">
-      <h2 className="text-pixel text-2xl sm:text-4xl neon-orange flicker">GAME OVER</h2>
+      <h2 className="text-pixel text-2xl sm:text-4xl neon-orange flicker">FIM DE JOGO</h2>
       <div className="arcade-border bg-card p-6 sm:p-8 text-center">
-        <div className="text-pixel text-xs sm:text-sm text-muted-foreground">FINAL SCORE</div>
+        <div className="text-pixel text-xs sm:text-sm text-muted-foreground">PONTUAÇÃO FINAL</div>
         <div className={`mt-2 text-pixel text-4xl sm:text-6xl ${score >= 0 ? "neon-teal" : "neon-orange"}`}>
-          {score.toLocaleString()}
+          {score.toLocaleString("pt-PT")}
         </div>
       </div>
 
       {!saved ? (
         <div className="flex flex-col items-center gap-3">
-          <label className="text-pixel text-[10px] sm:text-xs neon-yellow">ENTER YOUR NAME</label>
+          <label className="text-pixel text-[10px] sm:text-xs neon-yellow">INTRODUZ O TEU NOME</label>
           <input
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value.toUpperCase().slice(0, 16))}
             maxLength={16}
-            placeholder="ANON"
+            placeholder="ANÓNIMO"
             className="text-pixel text-sm bg-input border-2 border-primary px-3 py-2 text-center tracking-widest focus:outline-none focus:ring-2 focus:ring-primary"
           />
-          <button onClick={onSave} className="arcade-btn arcade-btn-yellow">SAVE SCORE</button>
+          <button onClick={onSave} className="arcade-btn arcade-btn-yellow">GUARDAR PONTUAÇÃO</button>
         </div>
       ) : (
-        <div className="text-pixel text-xs neon-teal">✓ SCORE SAVED</div>
+        <div className="text-pixel text-xs neon-teal">✓ PONTUAÇÃO GUARDADA</div>
       )}
 
       <div className="w-full max-w-2xl">
-        <h3 className="text-pixel text-sm neon-orange mb-3 text-center">◆ HALL OF FAME ◆</h3>
+        <h3 className="text-pixel text-sm neon-orange mb-3 text-center">◆ TABELA DE HONRA ◆</h3>
         <Leaderboard scores={scores} />
       </div>
 
       <div className="flex flex-wrap gap-4 justify-center">
         <button onClick={onMenu} className="arcade-btn arcade-btn-orange">◀ MENU</button>
-        <button onClick={onAgain} className="arcade-btn">PLAY AGAIN ▶</button>
+        <button onClick={onAgain} className="arcade-btn">JOGAR DE NOVO ▶</button>
       </div>
     </div>
   );

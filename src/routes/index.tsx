@@ -4,16 +4,16 @@ import { DinoGame } from "@/components/DinoGame";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Dino Arcade — Prehistoric Card Battle" },
+      { title: "Megafauna Arcade — Batalha de Cartas Pré-Históricas" },
       {
         name: "description",
         content:
-          "Retro arcade card game with 41 real dinosaur species. Swap or play to climb the leaderboard.",
+          "Jogo de cartas retro arcade com 41 espécies reais de dinossauros. Troca ou joga para subir na tabela de honra.",
       },
-      { property: "og:title", content: "Dino Arcade — Prehistoric Card Battle" },
+      { property: "og:title", content: "Megafauna Arcade — Batalha de Cartas Pré-Históricas" },
       {
         property: "og:description",
-        content: "Pixel-art dinosaur card battle. 41 species. Local high scores.",
+        content: "Batalha de cartas de dinossauros em pixel art. 41 espécies. Pontuações guardadas localmente.",
       },
     ],
   }),
